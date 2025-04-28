@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auto Aqua Chatbot</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #eef; }
+        #chatbox { width: 400px; margin: 50px auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); display: flex; flex-direction: column; height: 500px; }
+        #messages { flex: 1; overflow-y: auto; padding: 10px; }
+        .message { display: flex; margin-bottom: 10px; }
+        .bot { justify-content: flex-start; }
+        .user { justify-content: flex-end; }
+        .bubble { max-width: 70%; padding: 10px; border-radius: 10px; }
+        .bot .bubble { background: #d0eaff; color: #00509e; }
+        .user .bubble { background: #c2f0c2; color: #035e03; }
+        #inputArea { display: flex; padding: 10px; border-top: 1px solid #ccc; }
+        #input { flex: 1; padding: 10px; }
+        button { padding: 10px 20px; background: #0077cc; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div id="chatbox">
+    <div id="messages"></div>
+    <div id="inputArea">
+        <input type="text" id="input" placeholder="Type your message...">
+        <button onclick="send()">Send</button>
+    </div>
+</div>
+
+<script>
+    const messages = document.getElementById('messages');
+
+    const responses = {
+        order: "Auto Aqua: It looks like you have a question about your order! Please provide your order number.",
+        refund: "Auto Aqua: I can assist you with a refund. Kindly provide your order ID.",
+        account: "Auto Aqua: Need help accessing or updating your account? Let me assist!",
+        help: "Auto Aqua: I'm here to help! Please tell me more about your problem.",
+        shipping: "Auto Aqua: Shipping usually takes 3–5 business days. Let me know if yours is delayed!",
+        payment: "Auto Aqua: Payment issues can usually be fixed easily. Are you seeing any error messages?",
+        cancel: "Auto Aqua: You want to cancel your order? Please provide the order ID so I can assist."
+    };
+
+    function send() {
+        let input = document.getElementById('input').value.trim();
+        if (input === '') return;
+        showMessage(input, 'user');
+        getBotReply(input);
+        document.getElementById('input').value = '';
+    }
+
+    function showMessage(text, sender) {
+        let messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        let bubbleDiv = document.createElement('div');
+        bubbleDiv.className = 'bubble';
+        bubbleDiv.innerText = text;
+        messageDiv.appendChild(bubbleDiv);
+        messages.appendChild(messageDiv);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function getBotReply(input) {
+        input = input.toLowerCase();
+        let found = false;
+        for (const keyword in responses) {
+            if (input.includes(keyword)) {
+                showMessage(responses[keyword], 'bot');
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            showMessage("Auto Aqua: I'm forwarding this to a human representative.", 'bot');
+        }
+    }
+</script>
+</body>
+</html>
